@@ -23,6 +23,7 @@ import icy.gui.frame.IcyFrame;
 import icy.gui.util.GuiUtil;
 import icy.gui.util.WindowPositionSaver;
 import icy.main.Icy;
+import icy.preferences.XMLPreferences;
 import icy.sequence.Sequence;
 import icy.swimmingPool.SwimmingObject;
 
@@ -38,7 +39,6 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.prefs.Preferences;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -91,9 +91,6 @@ public class KMeansColorQuantization extends SingletonPlugin implements ActionLi
 	/** The Constant FULL_PLUGIN_NAME. */
 	private final static String FULL_PLUGIN_NAME = PLUGIN_NAME + " V" + PLUGIN_VERSION;
 
-	/** The Constant PREFERENCES_NODE. */
-	private final static String PREFERENCES_NODE = "icy/plugins/nherve/KMeansColorQuantization";
-	
 	private final static int WINDOW_WIDTH = 350;
 	private final static int WINDOW_HEIGHT = 300;
 	private final static int TITLE_HEIGHT = 100;
@@ -172,7 +169,7 @@ public class KMeansColorQuantization extends SingletonPlugin implements ActionLi
 	public void startInterface() {
 		currentlyRunning = null;
 
-		Preferences preferences = Preferences.userRoot().node(PREFERENCES_NODE);
+		XMLPreferences preferences = getPreferences();
 		int nbc2 = preferences.getInt("nbc2", 10);
 		int nbi2 = preferences.getInt("nbi2", 100);
 		double stab2 = preferences.getDouble("stab2", 0.001);
@@ -183,7 +180,7 @@ public class KMeansColorQuantization extends SingletonPlugin implements ActionLi
 		frame = GuiUtil.generateTitleFrame(FULL_PLUGIN_NAME, mainPanel, new Dimension(WINDOW_WIDTH, TITLE_HEIGHT), false, true, false, true);
 		mainPanel.setLayout(new BorderLayout());
 
-		new WindowPositionSaver(frame, PREFERENCES_NODE, new Point(0, 0));
+		new WindowPositionSaver(frame, preferences.absolutePath(), new Point(0, 0));
 
 		indexToColorspace = new HashMap<Integer, Integer>();
 		cbColorSpace = new JComboBox();
@@ -246,7 +243,7 @@ public class KMeansColorQuantization extends SingletonPlugin implements ActionLi
 	@Override
 	public void stopInterface() {
 		try {
-			Preferences preferences = Preferences.userRoot().node(PREFERENCES_NODE);
+			XMLPreferences preferences = getPreferences();
 
 			preferences.putInt("nbc2", Integer.parseInt(tfNbCluster2.getText()));
 			preferences.putInt("nbi2", Integer.parseInt(tfNbIteration2.getText()));
