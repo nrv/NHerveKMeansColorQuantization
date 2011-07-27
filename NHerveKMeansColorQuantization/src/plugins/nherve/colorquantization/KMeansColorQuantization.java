@@ -19,9 +19,7 @@
 package plugins.nherve.colorquantization;
 
 import icy.gui.component.ComponentUtil;
-import icy.gui.frame.IcyFrame;
 import icy.gui.util.GuiUtil;
-import icy.gui.util.WindowPositionSaver;
 import icy.main.Icy;
 import icy.preferences.XMLPreferences;
 import icy.sequence.Sequence;
@@ -31,7 +29,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.lang.reflect.InvocationTargetException;
@@ -82,28 +79,9 @@ import plugins.nherve.toolbox.plugin.SingletonPlugin;
  * @author Nicolas HERVE - nicolas.herve@pasteur.fr
  */
 public class KMeansColorQuantization extends SingletonPlugin implements ActionListener {
-	/** The Constant PLUGIN_NAME. */
-	private final static String PLUGIN_NAME = "KMeansColorQuantization";
-
-	/** The Constant PLUGIN_VERSION. */
-	private final static String PLUGIN_VERSION = "1.0.0";
-
-	/** The Constant FULL_PLUGIN_NAME. */
-	private final static String FULL_PLUGIN_NAME = PLUGIN_NAME + " V" + PLUGIN_VERSION;
-
-	private final static int WINDOW_WIDTH = 350;
-	private final static int WINDOW_HEIGHT = 300;
-	private final static int TITLE_HEIGHT = 100;
-
-	private static String HELP = "<html>" + "<p align=\"center\"><b>" + FULL_PLUGIN_NAME + "</b></p>" + "<p align=\"center\"><b>" + NherveToolbox.DEV_NAME_HTML + "</b></p>" + "<p align=\"center\"><b>" + NherveToolbox.COPYRIGHT_HTML + "</b></p>" + "<hr/>" + "<p>" + PLUGIN_NAME + NherveToolbox.LICENCE_HTML + "</p>" + "<p>" + NherveToolbox.LICENCE_HTMLLINK + "</p>" + "</html>";
+	private static String HELP = "<html>" + "<p align=\"center\"><b>" + HelpWindow.TAG_FULL_PLUGIN_NAME + "</b></p>" + "<p align=\"center\"><b>" + NherveToolbox.DEV_NAME_HTML + "</b></p>" + "<p align=\"center\"><b>" + NherveToolbox.COPYRIGHT_HTML + "</b></p>" + "<hr/>" + "<p>" + HelpWindow.TAG_PLUGIN_NAME + NherveToolbox.LICENCE_HTML + "</p>" + "<p>" + NherveToolbox.LICENCE_HTMLLINK + "</p>" + "</html>";
 
 	private Map<Integer, Integer> indexToColorspace;
-
-	/** The frame. */
-	private IcyFrame frame;
-
-	/** The main panel. */
-	private JPanel mainPanel;
 
 	/** The cb color space. */
 	private JComboBox cbColorSpace;
@@ -159,14 +137,9 @@ public class KMeansColorQuantization extends SingletonPlugin implements ActionLi
 	@Override
 	public void sequenceWillChange() {
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see plugins.nherve.toolbox.plugin.SingletonPlugin#startInterface()
-	 */
+	
 	@Override
-	public void startInterface() {
+	public void fillInterface(JPanel mainPanel) {
 		currentlyRunning = null;
 
 		XMLPreferences preferences = getPreferences();
@@ -175,12 +148,6 @@ public class KMeansColorQuantization extends SingletonPlugin implements ActionLi
 		double stab2 = preferences.getDouble("stab2", 0.001);
 
 		boolean dsp = preferences.getBoolean("dsp", false);
-
-		mainPanel = GuiUtil.generatePanel();
-		frame = GuiUtil.generateTitleFrame(FULL_PLUGIN_NAME, mainPanel, new Dimension(WINDOW_WIDTH, TITLE_HEIGHT), false, true, false, true);
-		mainPanel.setLayout(new BorderLayout());
-
-		new WindowPositionSaver(frame, preferences.absolutePath(), new Point(0, 0));
 
 		indexToColorspace = new HashMap<Integer, Integer>();
 		cbColorSpace = new JComboBox();
@@ -225,14 +192,6 @@ public class KMeansColorQuantization extends SingletonPlugin implements ActionLi
 
 		JPanel bottom = GuiUtil.createLineBoxPanel(new Component[] { btHelp, Box.createHorizontalGlue(), cbDisplay, cbSendMaskDirectly, Box.createHorizontalGlue(), btStart });
 		mainPanel.add(bottom, BorderLayout.SOUTH);
-
-		frame.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-		frame.addFrameListener(this);
-		frame.setVisible(true);
-		frame.pack();
-		addIcyFrame(frame);
-
-		frame.requestFocus();
 	}
 
 	/*
@@ -269,7 +228,7 @@ public class KMeansColorQuantization extends SingletonPlugin implements ActionLi
 		}
 
 		if (b == btHelp) {
-			new HelpWindow(PLUGIN_NAME, HELP, 400, 300, frame);
+			openHelpWindow(HELP, 400, 300);
 			return;
 		}
 
@@ -455,5 +414,9 @@ public class KMeansColorQuantization extends SingletonPlugin implements ActionLi
 
 		return seg;
 	}
-
+	
+	@Override
+	public Dimension getDefaultFrameDimension() {
+		return null;
+	}
 }
