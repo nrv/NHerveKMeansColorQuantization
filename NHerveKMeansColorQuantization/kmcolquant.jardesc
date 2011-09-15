@@ -13,5 +13,6 @@
     <selectedElements exportClassFiles="true" exportJavaFiles="true" exportOutputFolder="false">
         <file path="/NHerveKMeansColorQuantization/COPYING"/>
         <javaElement handleIdentifier="=NHerveKMeansColorQuantization/src"/>
+        <file path="/NHerveKMeansColorQuantization/Manifest.MF"/>
     </selectedElements>
 </jardesc>
