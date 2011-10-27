@@ -48,6 +48,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 
 import plugins.nherve.maskeditor.MaskEditor;
+import plugins.nherve.toolbox.Algorithm;
 import plugins.nherve.toolbox.NherveToolbox;
 import plugins.nherve.toolbox.image.feature.DefaultClusteringAlgorithmImpl;
 import plugins.nherve.toolbox.image.feature.SegmentableBufferedImage;
@@ -324,7 +325,7 @@ public class KMeansColorQuantization extends SingletonPlugin implements ActionLi
 	 */
 	private void getSomeStats(Segmentation seg) {
 		DecimalFormat df = new DecimalFormat("0");
-		System.out.println("id;label;h1;h2;h3");
+		Algorithm.out("id;label;h1;h2;h3");
 		for (Mask m : seg) {
 			Color rgb = m.getColor();
 			double[] h1h2h3 = ColorSpaceTools.getColorComponentsD_0_255(ColorSpaceTools.RGB_TO_I1H2H3, rgb.getRed(), rgb.getGreen(), rgb.getBlue());
