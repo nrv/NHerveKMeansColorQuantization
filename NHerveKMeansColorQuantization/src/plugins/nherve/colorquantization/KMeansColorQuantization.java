@@ -51,9 +51,9 @@ import plugins.nherve.maskeditor.MaskEditor;
 import plugins.nherve.toolbox.Algorithm;
 import plugins.nherve.toolbox.NherveToolbox;
 import plugins.nherve.toolbox.image.feature.DefaultClusteringAlgorithmImpl;
-import plugins.nherve.toolbox.image.feature.SegmentableBufferedImage;
+import plugins.nherve.toolbox.image.feature.SegmentableIcyBufferedImage;
 import plugins.nherve.toolbox.image.feature.Signature;
-import plugins.nherve.toolbox.image.feature.SupportRegion;
+import plugins.nherve.toolbox.image.feature.IcySupportRegion;
 import plugins.nherve.toolbox.image.feature.clustering.KMeans;
 import plugins.nherve.toolbox.image.feature.descriptor.ColorPixel;
 import plugins.nherve.toolbox.image.feature.descriptor.DefaultDescriptorImpl;
@@ -307,8 +307,8 @@ public class KMeansColorQuantization extends SingletonPlugin implements ActionLi
 	 * @throws SegmentationException
 	 *             the segmentation exception
 	 */
-	private Segmentation doSingleClustering(SegmentableBufferedImage img, SupportRegion[] regions, DefaultDescriptorImpl<SegmentableBufferedImage, ? extends Signature> descriptor, DefaultClusteringAlgorithmImpl<VectorSignature> algo) throws SupportRegionException, SegmentationException {
-		DefaultSegmentationAlgorithm<SegmentableBufferedImage> segAlgo = new DefaultSegmentationAlgorithm<SegmentableBufferedImage>(descriptor, algo);
+	private Segmentation doSingleClustering(SegmentableIcyBufferedImage img, IcySupportRegion[] regions, DefaultDescriptorImpl<SegmentableIcyBufferedImage, ? extends Signature> descriptor, DefaultClusteringAlgorithmImpl<VectorSignature> algo) throws SupportRegionException, SegmentationException {
+		DefaultSegmentationAlgorithm<SegmentableIcyBufferedImage> segAlgo = new DefaultSegmentationAlgorithm<SegmentableIcyBufferedImage>(descriptor, algo);
 		segAlgo.setLogEnabled(isLogEnabled());
 
 		Segmentation seg = segAlgo.segment(img, regions);
@@ -387,14 +387,14 @@ public class KMeansColorQuantization extends SingletonPlugin implements ActionLi
 
 		log("Working on " + ColorSpaceTools.COLOR_SPACES[cs]);
 
-		SegmentableBufferedImage img = new SegmentableBufferedImage(currentSequence.getFirstImage());
+		SegmentableIcyBufferedImage img = new SegmentableIcyBufferedImage(currentSequence.getFirstImage());
 
 		KMeans km2 = new KMeans(nbc2, nbi2, stab2);
 		km2.setLogEnabled(isLogEnabled());
 
 		Segmentation seg = null;
 
-		DefaultDescriptorImpl<SegmentableBufferedImage, ? extends Signature> col = null;
+		DefaultDescriptorImpl<SegmentableIcyBufferedImage, ? extends Signature> col = null;
 
 		ColorPixel cd = new ColorPixel(isLogEnabled());
 		cd.setColorSpace(cs);
@@ -404,10 +404,10 @@ public class KMeansColorQuantization extends SingletonPlugin implements ActionLi
 
 		GridFactory factory = new GridFactory(GridFactory.ALGO_ONLY_PIXELS);
 		factory.setLogEnabled(isLogEnabled());
-		List<SupportRegion> lRegions = factory.extractRegions(img);
-		SupportRegion[] regions = new SupportRegion[lRegions.size()];
+		List<IcySupportRegion> lRegions = factory.extractRegions(img);
+		IcySupportRegion[] regions = new IcySupportRegion[lRegions.size()];
 		int r = 0;
-		for (SupportRegion sr : lRegions) {
+		for (IcySupportRegion sr : lRegions) {
 			regions[r++] = sr;
 		}
 
