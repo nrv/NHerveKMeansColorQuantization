@@ -418,6 +418,6 @@ public class KMeansColorQuantization extends SingletonPlugin implements ActionLi
 	
 	@Override
 	public Dimension getDefaultFrameDimension() {
-		return null;
+		return new Dimension(550, 300);
 	}
 }
