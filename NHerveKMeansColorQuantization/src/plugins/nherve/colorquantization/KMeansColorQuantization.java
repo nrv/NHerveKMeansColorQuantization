@@ -59,6 +59,7 @@ import plugins.nherve.toolbox.image.feature.descriptor.ColorPixel;
 import plugins.nherve.toolbox.image.feature.descriptor.DefaultDescriptorImpl;
 import plugins.nherve.toolbox.image.feature.region.GridFactory;
 import plugins.nherve.toolbox.image.feature.region.SupportRegionException;
+import plugins.nherve.toolbox.image.feature.signature.DefaultVectorSignature;
 import plugins.nherve.toolbox.image.feature.signature.SignatureException;
 import plugins.nherve.toolbox.image.feature.signature.VectorSignature;
 import plugins.nherve.toolbox.image.mask.Mask;
@@ -267,19 +268,19 @@ public class KMeansColorQuantization extends SingletonPlugin implements ActionLi
 								SwingUtilities.invokeAndWait(r);
 							}
 						} catch (SupportRegionException e1) {
-							logError(e1.getClass().getName() + " : " + e1.getMessage());
+							error(e1.getClass().getName() + " : " + e1.getMessage());
 						} catch (SegmentationException e1) {
-							logError(e1.getClass().getName() + " : " + e1.getMessage());
+							error(e1.getClass().getName() + " : " + e1.getMessage());
 						} catch (InterruptedException e1) {
-							logError(e1.getClass().getName() + " : " + e1.getMessage());
+							error(e1.getClass().getName() + " : " + e1.getMessage());
 						} catch (InvocationTargetException e1) {
-							logError(e1.getClass().getName() + " : " + e1.getMessage());
+							error(e1.getClass().getName() + " : " + e1.getMessage());
 						} catch (MaskException e1) {
-							logError(e1.getClass().getName() + " : " + e1.getMessage());
+							error(e1.getClass().getName() + " : " + e1.getMessage());
 						} catch (NumberFormatException e) {
-							logError(e.getClass().getName() + " : " + e.getMessage());
+							error(e.getClass().getName() + " : " + e.getMessage());
 						} catch (SignatureException e) {
-							logError(e.getClass().getName() + " : " + e.getMessage());
+							error(e.getClass().getName() + " : " + e.getMessage());
 						}
 					}
 				};
@@ -307,7 +308,7 @@ public class KMeansColorQuantization extends SingletonPlugin implements ActionLi
 	 * @throws SegmentationException
 	 *             the segmentation exception
 	 */
-	private Segmentation doSingleClustering(SegmentableIcyBufferedImage img, IcySupportRegion[] regions, DefaultDescriptorImpl<SegmentableIcyBufferedImage, ? extends Signature> descriptor, DefaultClusteringAlgorithmImpl<VectorSignature> algo) throws SupportRegionException, SegmentationException {
+	private Segmentation doSingleClustering(SegmentableIcyBufferedImage img, IcySupportRegion[] regions, DefaultDescriptorImpl<SegmentableIcyBufferedImage, ? extends Signature> descriptor, DefaultClusteringAlgorithmImpl<DefaultVectorSignature> algo) throws SupportRegionException, SegmentationException {
 		DefaultSegmentationAlgorithm<SegmentableIcyBufferedImage> segAlgo = new DefaultSegmentationAlgorithm<SegmentableIcyBufferedImage>(descriptor, algo);
 		segAlgo.setLogEnabled(isLogEnabled());
 
@@ -329,7 +330,7 @@ public class KMeansColorQuantization extends SingletonPlugin implements ActionLi
 		for (Mask m : seg) {
 			Color rgb = m.getColor();
 			double[] h1h2h3 = ColorSpaceTools.getColorComponentsD_0_255(ColorSpaceTools.RGB_TO_I1H2H3, rgb.getRed(), rgb.getGreen(), rgb.getBlue());
-			log(m.getId() + ";" + m.getLabel() + ";" + df.format(h1h2h3[0]) + ";" + df.format(h1h2h3[1]) + ";" + df.format(h1h2h3[2]));
+			info(m.getId() + ";" + m.getLabel() + ";" + df.format(h1h2h3[0]) + ";" + df.format(h1h2h3[1]) + ";" + df.format(h1h2h3[2]));
 		}
 	}
 
@@ -385,7 +386,7 @@ public class KMeansColorQuantization extends SingletonPlugin implements ActionLi
 		double stab2 = Double.parseDouble(tfStabCrit2.getText());
 		int cs = indexToColorspace.get(cbColorSpace.getSelectedIndex());
 
-		log("Working on " + ColorSpaceTools.COLOR_SPACES[cs]);
+		info("Working on " + ColorSpaceTools.COLOR_SPACES[cs]);
 
 		SegmentableIcyBufferedImage img = new SegmentableIcyBufferedImage(currentSequence.getFirstImage());
 
